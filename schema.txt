@@ -1,0 +1,116 @@
+user {
+    id:
+    email:
+    phone no:
+    password:
+    payment_id
+}
+
+services{
+    id
+    name
+    price
+}
+
+extras{
+    id
+    name
+    price
+}
+
+user_service{
+    user_id
+    service_id
+}
+
+service_adress{
+    id
+    service_id
+    user_adress
+    extras
+}
+
+user_extras{
+    user_id
+    extras_id
+}
+
+payment_detail{
+    user_id
+    payment_id
+    payment_details
+}
+
+appointments{
+
+}
+
+
+
+CREATE TABLE users (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+);
+
+-- Table for services
+CREATE TABLE services (
+    service_id INT PRIMARY KEY AUTO_INCREMENT,
+    service_name VARCHAR(255) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+);
+
+-- Table for extras
+CREATE TABLE extras (
+    extra_id INT PRIMARY KEY AUTO_INCREMENT,
+    extra_name VARCHAR(255) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+);
+
+-- Table for addresses
+CREATE TABLE addresses (
+    address_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    address_line1 VARCHAR(255) NOT NULL,
+    address_line2 VARCHAR(255),
+    city VARCHAR(255) NOT NULL,
+    state VARCHAR(255) NOT NULL,
+    zip_code VARCHAR(20) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+-- Table for appointments
+CREATE TABLE appointments (
+    appointment_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    service_id INT,
+    address_id INT,
+    appointment_date DATETIME NOT NULL,
+    -- Add other appointment-related fields as needed
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (service_id) REFERENCES services(service_id),
+    FOREIGN KEY (address_id) REFERENCES addresses(address_id)
+);
+
+-- Table for appointment extras (to link extras with appointments)
+CREATE TABLE appointment_extras (
+    appointment_id INT,
+    extra_id INT,
+    PRIMARY KEY (appointment_id, extra_id),
+    FOREIGN KEY (appointment_id) REFERENCES appointments(appointment_id),
+    FOREIGN KEY (extra_id) REFERENCES extras(extra_id)
+);
+
+-- Table for payments
+CREATE TABLE payments (
+    payment_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    appointment_id INT,
+    amount DECIMAL(10, 2) NOT NULL,
+    payment_status ENUM('pending', 'success', 'failure') DEFAULT 'pending',
+    payment_date DATETIME,
+    -- Add other payment-related fields as needed
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (appointment_id) REFERENCES appointments(appointment_id)
+);
