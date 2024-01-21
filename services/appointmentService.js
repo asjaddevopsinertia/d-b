@@ -2,14 +2,15 @@ const db = require('../db/db');
 
 exports.selectService = (userId, appointments, appointmentDate, res) => {
   const appointmentQuery = `
-    INSERT INTO appointments (user_id, service_id, address_id, appointment_date, user_name, service_name, address_name)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-  `;
+  INSERT INTO appointments (user_id, service_id, address_id, appointment_date, user_name, service_name, address_name, type_name, number_of_rooms, number_of_bathrooms, price)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+`;
 
   const insertedAppointmentIds = [];
 
   const processAppointment = (appointment) => {
-    const { serviceId, addressId, extras } = appointment;
+    console.log("app", appointment)
+    const { serviceId, addressId, extras, typeName, numberOfRooms, numberOfBathrooms,price } = appointment;
 
     const userNameQuery = 'SELECT username FROM users WHERE user_id = ?';
     const serviceNameQuery = 'SELECT service_name FROM services WHERE service_id = ?';
@@ -42,7 +43,7 @@ exports.selectService = (userId, appointments, appointmentDate, res) => {
 
           const addressName = addressResults[0].full_address;
 
-          db.query(appointmentQuery, [userId, serviceId, addressId, appointmentDate, userName, serviceName, addressName], (err, results) => {
+          db.query(appointmentQuery, [userId, serviceId, addressId, appointmentDate, userName, serviceName, addressName, typeName, numberOfRooms, numberOfBathrooms,price], (err, results) => {
             if (err) {
               console.error('Error creating appointment:', err);
               res.status(500).json({ error: 'Internal Server Error' });
