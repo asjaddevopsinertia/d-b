@@ -73,3 +73,40 @@ exports.getAllPayments = (res) => {
     }
   });
 };
+
+
+exports.config  = (res) => {
+  res.send({
+    publishableKey: 'pk_test_51OXqbQHnIZ45tCR8pz9OEoZxgxLFLHGuPyIL6IgQw7XDWeY26nl6AlBdJrDzeDpSgl6VGJbrxkOEBZWIw9b7VOEW00xnYCwpJx',
+  });
+  
+}
+
+
+
+exports.create =  async(req, res, price) => {
+  console.log("res", res)
+  var dollarString = price;
+var dollarAmount = parseFloat(dollarString);
+var centsValue = dollarAmount * 100;
+
+console.log("cents", centsValue)
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      currency: "usd",
+      amount: centsValue,
+      automatic_payment_methods: { enabled: true },
+    });
+
+    // Send publishable key and PaymentIntent details to client
+    res.send({
+      clientSecret: paymentIntent.client_secret,
+    });
+  } catch (e) {
+    return res.status(400).send({
+      error: {
+        message: e.message,
+      },
+    });
+  }
+};

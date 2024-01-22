@@ -6,4 +6,7 @@ router.post('/make-payment', paymentController.makePayment);
 router.post('/getPayments', paymentController.getPaymentsByUserId);
 router.get('/getPayments', paymentController.getAllPayments);
 
+router.post('/create', paymentController.create);
+router.get('/config', paymentController.config);
+
 module.exports = router;

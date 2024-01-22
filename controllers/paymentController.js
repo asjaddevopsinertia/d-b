@@ -15,3 +15,12 @@ exports.getPaymentsByUserId = (req, res) => {
 exports.getAllPayments = (req, res) => {
   paymentService.getAllPayments(res)
 }
+
+exports.config = (req, res) => {
+  paymentService.config(res)
+}
+
+exports.create = (req, res) => {
+  const { price } = req.body;
+  paymentService.create(req, res, price)
+}
